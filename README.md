@@ -1,27 +1,17 @@
 # BART106M
 
-## Подготовка и обучение
+## Обучение
 
-Исходные данные: `SlavaYus/tinysms_qa_12m`, revision `b2724689ff079e9c22efd548fe134bfb29036dbb`. Нужны60 файлов `part-00000.parquet` ... `part-00059.parquet` из опубликованного train.
-
-Из папки проекта:
+Скачайте train-данные [SlavaYus/tinysms_qa_12m](https://huggingface.co/datasets/SlavaYus/tinysms_qa_12m). Из папки проекта выполните:
 
 ```bash
+pip install -r requirements.txt
 python prepare_data.py --raw-dir /путь/к/data/train
 ```
 
-Скрипт создаёт `data/prepared_data.zip`: 5820047 training-пар и1500 validation-примеров после прежних фильтров, split и токенизации. Состав и порядок массивов проверяются по сохранённым хэшам. Готовый архив при повторном запуске проверяется и используется повторно.
+Скрипт создаст `data/prepared_data.zip`. Откройте `solution.ipynb` и выполните все ячейки для обучения, усреднения весов и инференса.
 
-Затем откройте `solution.ipynb` и выполните все ячейки. Он обучает модель с нуля, сохраняет90940/96625/102308 и усредняет их. Для продолжения укажите `RESUME`. Основной конфиг рассчитан на A100/BF16; для меньшей GPU уменьшите `physical_batch`, сохранив effective256.
+## Colab-инференс
 
-Token-ID массивы совпадают с историческими. Байты ZIP могут отличаться из-за упаковки и сокращённого набора служебных файлов. Старый архив тоже поддерживается.
-
-Код: `prepare_data.py` → `data.py` → `model.py` → `train.py` → `inference.py`. Зависимости: `requirements.txt`; CUDA-сборка PyTorch должна соответствовать драйверу.
-
-## Готовый Colab-инференс
-
-`inference_on_colab/Colab_inference_T4.ipynb`
-
-Входной ZIP с готовыми весами: `Мой диск/nlp_hw2/inference_avg3_mid.zip`.
-
-Загрузите ZIP на Drive по пути ниже. Выберите T4 и выполните все ячейки.
+Загрузите `inference_avg3_mid.zip` на Drive: `Мой диск/nlp_hw2/inference_avg3_mid.zip`.
+Откройте `inference_on_colab/Colab_inference_T4.ipynb`, выберите T4 и выполните все ячейки.
