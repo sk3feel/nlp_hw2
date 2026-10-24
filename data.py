@@ -222,21 +222,26 @@ def prepare_data(raw_dir, output, assets, retrain_tokenizer=False):
     return output
 
 
-def unpack_prepared(assets):
+def unpack_prepared(assets, archive=None, output=None):
     assets = Path(assets)
-    output = assets / "colab_training_data"
-    if not output.exists():
-        identity = json.loads((assets / "identity.json").read_text())
-        if sha256(assets / "prepared_data.zip") != identity["prepared_zip_sha256"]:
-            raise ValueError("Повреждён prepared_data.zip")
-        output.mkdir()
-        names = list(identity["cache_sha256"])
-        with zipfile.ZipFile(assets / "prepared_data.zip") as archive:
-            for name in names:
-                target = output / name
+    archive = Path(archive) if archive is not None else assets / "prepared_data.zip"
+    output = Path(output) if output is not None else assets / "colab_training_data"
+    if output.exists():
+        verify_data(output, assets)
+        return output
+    identity = json.loads((assets / "identity.json").read_text())
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(dir=output.parent) as temporary:
+        prepared = Path(temporary) / "colab_training_data"
+        prepared.mkdir()
+        with zipfile.ZipFile(archive) as source:
+            for name in identity["cache_sha256"]:
+                target = prepared / name
                 target.parent.mkdir(parents=True, exist_ok=True)
-                with archive.open("colab_training_data/" + name) as src, target.open("wb") as dst:
+                with source.open("colab_training_data/" + name) as src, target.open("wb") as dst:
                     shutil.copyfileobj(src, dst)
+        verify_data(prepared, assets)
+        prepared.rename(output)
     return output
 
 

@@ -11,3 +11,7 @@ weights/**/*.bin
 /data/raw_dataset/
 /data/colab_training_data/
 /outputs/
+
+/data/prepared_data.zip
+/data/prepare_*/
+/data/*.tmp.zip
