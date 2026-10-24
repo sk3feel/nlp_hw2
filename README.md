@@ -14,4 +14,4 @@ ZIP: `inference_on_colab/inference_avg3_mid.zip`
 
 Drive: `Мой диск/nlp_hw2/inference_avg3_mid.zip`
 
-Загрузите ZIP на Drive по пути ниже. Выберите T4 и выполните все ячейки.
+Для получения результата необходимо загрузить ZIP на Drive по указанному выше пути . Выберать T4 и выполнить все ячейки.
